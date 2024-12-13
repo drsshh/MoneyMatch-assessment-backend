@@ -26,4 +26,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.progress = 'D'")
     List<Task> findTasksProgressNotDone();
 
+    @Query("SELECT t FROM Task t WHERE t.id = :id")
+    Task findById(@Param("id") String id);
+
 }

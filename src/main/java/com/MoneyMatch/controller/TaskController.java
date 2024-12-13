@@ -1,5 +1,6 @@
 package com.MoneyMatch.controller;
 
+import com.MoneyMatch.dto.request.GetTaskRequestDTO;
 import com.MoneyMatch.dto.response.GetTaskResponseDTO;
 import com.MoneyMatch.dto.response.ResponseDTO;
 import com.MoneyMatch.entity.Task;
@@ -16,9 +17,9 @@ public class TaskController {
     TaskService taskService;
 
     @PostMapping(path = "/gettasks")
-    public GetTaskResponseDTO getTasks() {
+    public GetTaskResponseDTO getTasks(@RequestBody GetTaskRequestDTO getTaskRequestDTO) {
         GetTaskResponseDTO getTaskResponseDTO;
-        getTaskResponseDTO = taskService.getTasks();
+        getTaskResponseDTO = taskService.getTasks(getTaskRequestDTO.getValue());
 
         return getTaskResponseDTO;
     }
@@ -31,7 +32,7 @@ public class TaskController {
          return responseDTO;
     }
 
-    @PutMapping(path = "/updatetask")
+    @PostMapping(path = "/updatetask")
     public ResponseDTO updateTask(@RequestBody Task updatedTask){
         ResponseDTO responseDTO;
 

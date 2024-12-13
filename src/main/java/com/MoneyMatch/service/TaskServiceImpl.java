@@ -22,13 +22,34 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public GetTaskResponseDTO getTasks() {
+    public GetTaskResponseDTO getTasks(String value) {
         GetTaskResponseDTO getTaskResponseDTO = new GetTaskResponseDTO();
 
         try {
-            getTaskResponseDTO.setTasks(taskRepository.findTasksNotRemoved());
+            switch (value) {
+                case "All":
+                    getTaskResponseDTO.setTasks(taskRepository.findTasksNotRemoved());
+                    break;
+
+                case "F":
+                    getTaskResponseDTO.setTasks(taskRepository.findTasksProgressFinish());
+                    break;
+
+                case "D":
+                    getTaskResponseDTO.setTasks(taskRepository.findTasksProgressNotDone());
+                    break;
+
+                case "R":
+                    getTaskResponseDTO.setTasks(taskRepository.findTasksRemoved());
+                    break;
+
+                default:
+                    getTaskResponseDTO.setTasks(taskRepository.findTasksProgressNotDone());
+                    break;
+            }
             getTaskResponseDTO.setErrorCode("0");
             getTaskResponseDTO.setErrorDescr("Successful.");
+
         } catch (Exception e) {
             getTaskResponseDTO.setTasks(null);
             getTaskResponseDTO.setErrorCode("1");
@@ -70,7 +91,7 @@ public class TaskServiceImpl implements TaskService {
     public ResponseDTO updateTask(Task updatedTask) {
         ResponseDTO response = new ResponseDTO();
         try {
-            Task task = taskRepository.findById(Long.valueOf(updatedTask.getId())).orElseThrow();
+            Task task = taskRepository.findById(updatedTask.getId());
             task.setTitle(updatedTask.getTitle());
             task.setDescription(updatedTask.getDescription());
             task.setProgress(updatedTask.getProgress());
@@ -91,7 +112,7 @@ public class TaskServiceImpl implements TaskService {
         ResponseDTO response = new ResponseDTO();
 
         try {
-            Task task = taskRepository.findById(Long.valueOf(id)).orElseThrow();
+            Task task = taskRepository.findById(id);
             task.setProgress('R');
 
             taskRepository.save(task);
